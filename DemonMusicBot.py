@@ -69,67 +69,48 @@ async def live(client: Client, message: Message):
     
 #musiqi əmri#
 
-@bot.on_message(filters.command(['song']))
-def a(client, message):
-    query = ''
-    for i in message.command[1:]:
-        query += ' ' + str(i)
-    print(query)
-    m = message.reply('`🔎 Axtarılır...`')
-    ydl_opts = {"format": "bestaudio[ext=m4a]"}
+@bot.on_message(filters.command("bul") & ~filters.edited)
+def bul(_, message):
+    query = " ".join(message.command[1:])
+    m = message.reply("<b>Şarkınız Aranıyor ... 🔍</b>")
+    ydl_ops = {"format": "bestaudio[ext=m4a]"}
     try:
-        results = []
-        count = 0
-        while len(results) == 0 and count < 6:
-            if count>0:
-                time.sleep(1)
-            results = YoutubeSearch(query, max_results=1).to_dict()
-            count += 1
-        try:
-            link = f"https://youtube.com{results[0]['url_suffix']}"
-            title = results[0]["title"]
-            thumbnail = results[0]["thumbnails"][0]
-            duration = results[0]["duration"]
-            views = results[0]["views"]
-            thumb_name = f'thumb{message.message_id}.jpg'
-            thumb = requests.get(thumbnail, allow_redirects=True)
-            open(thumb_name, 'wb').write(thumb.content)
+        results = YoutubeSearch(query, max_results=1).to_dict()
+        link = f"https://youtube.com{results[0]['url_suffix']}"
+        title = results[0]["title"][:40]
+        thumbnail = results[0]["thumbnails"][0]
+        thumb_name = f"{title}.jpg"
+        thumb = requests.get(thumbnail, allow_redirects=True)
+        open(thumb_name, "wb").write(thumb.content)
+        duration = results[0]["duration"]
 
-        except Exception as e:
-            print(e)
-            m.edit('İstədiyiniz musiqi tapılmadı 😔')
-            return
     except Exception as e:
-        m.edit(
-            "İstədiyiniz musiqi tapılmadı 😔"
-        )
+        m.edit("<b>❌ Üzgünüm şarkı bulunamadı.\n\n Lütfen başka şarkı ismi söyleyin.</b>")
         print(str(e))
         return
-    m.edit("`📥 Musiqini tapdım və endirirəm.`")
+    m.edit("<b>📥 İndirme İşlemi Başladı...</b>")
     try:
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        with yt_dlp.YoutubeDL(ydl_ops) as ydl:
             info_dict = ydl.extract_info(link, download=False)
             audio_file = ydl.prepare_filename(info_dict)
             ydl.process_info(info_dict)
-        rep = f"🎵 Yüklədi [Music Bot](https://t.me/{Config.BOT_USERNAME})"
-        secmul, dur, dur_arr = 1, 0, duration.split(':')
-        for i in range(len(dur_arr)-1, -1, -1):
-            dur += (int(dur_arr[i]) * secmul)
+        rep = f"**🎶 İndirildi. İyi Dinlemeler [@mutsuz_panda](https://t.me/mutsuz_panda) 🎶.**"
+        secmul, dur, dur_arr = 1, 0, duration.split(":")
+        for i in range(len(dur_arr) - 1, -1, -1):
+            dur += int(float(dur_arr[i])) * secmul
             secmul *= 60
-        message.reply_audio(audio_file, caption=rep, parse_mode='md',quote=False, title=title, duration=dur, thumb=thumb_name, performer="@Botsinator")
+        m.edit("📤 Yükleniyor..")
+        message.reply_audio(audio_file, caption=rep, parse_mode='md',quote=False, title=title, duration=dur, thumb=thumb_name, performer="@mutsuz_panda")
         m.delete()
-        bot.send_audio(chat_id=Config.PLAYLIST_ID, audio=audio_file, caption=rep, performer="@Botsinator", parse_mode='md', title=title, duration=dur, thumb=thumb_name)
+        bot.send_audio(chat_id=Config.PLAYLIST_ID, audio=audio_file, caption=rep, performer="@mutsuz_panda", parse_mode='md', title=title, duration=dur, thumb=thumb_name)
     except Exception as e:
-        m.edit('**⚠️ Gözlənilməyən xəta yarandı.**\n**Xahiş edirəm xətanı sahibimə xəbərdar et!**')
+        m.edit("<b>❌ Hatanın, düzelmesini bekleyiniz.</b>")
         print(e)
+
     try:
         os.remove(audio_file)
         os.remove(thumb_name)
     except Exception as e:
         print(e)
-
-def time_to_seconds(time):
-    stringt = str(time)
-    return sum(int(x) * 60 ** i for i, x in enumerate(reversed(stringt.split(':'))))
 
 bot.run()

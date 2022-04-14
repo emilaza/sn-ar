@@ -96,6 +96,16 @@ def bul(_, message):
             audio_file = ydl.prepare_filename(info_dict)
             ydl.process_info(info_dict)
         rep = f"**🎶 İndirildi. İyi Dinlemeler [@mutsuz_panda](https://t.me/mutsuz_panda) 🎶.**"
+          message.reply_text(
+          text=rep, 
+          quote=False,
+          reply_markup=InlineKeyboardMarkup(
+              [[
+                    InlineKeyboardButton('Playlist 🎵', url=f'https://t.me/{Config.PLAYLIST_NAME}')
+                ]
+            ]
+        )
+    ) 
         secmul, dur, dur_arr = 1, 0, duration.split(":")
         for i in range(len(dur_arr) - 1, -1, -1):
             dur += int(float(dur_arr[i])) * secmul

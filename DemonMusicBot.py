@@ -96,9 +96,6 @@ def bul(_, message):
             audio_file = ydl.prepare_filename(info_dict)
             ydl.process_info(info_dict)
         rep = f"**🎶 İndirildi. İyi Dinlemeler [@mutsuz_panda](https://t.me/mutsuz_panda) 🎶.**"
-          message.reply_text(
-          text=rep, 
-          quote=False,
           reply_markup=InlineKeyboardMarkup(
               [[
                     InlineKeyboardButton('Playlist 🎵', url=f'https://t.me/{Config.PLAYLIST_NAME}')

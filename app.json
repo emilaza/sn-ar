@@ -7,8 +7,8 @@
         "Music",
         "Bot"
     ],
-    "repository": "https://github.com/emilaza/sn-ar",
-    "success_url": "https://github.com/emilaza/sn-ar",
+    "repository": "https://github.com/",
+    "success_url": "https://github.com/",
     "image": "heroku/python",
     "formation": {
         "worker": {

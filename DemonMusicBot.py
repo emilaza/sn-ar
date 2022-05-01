@@ -42,7 +42,7 @@ def start(client, message):
 
 @bot.on_message(filters.command(['help']))
 def help(client, message):
-    helptext = f'**Müzik indirmek için /bul komutunu kullabilirsin ⤵️**\n\n**Örnek:**\n**1.** `/bul gece mavisi`\n**2.** `/bul https://youtu.be/qLXUa89Q5WI`\n\n**İndirdiğin müzikler [𝑆𝑒𝑛𝑖𝑛 𝑆̧𝑎𝑟𝑘𝑖𝑛](https://t.me/seninsarkinn) kanalında paylaşılacaktır.**'
+    helptext = f'**Müzik indirmek için /bul komutunu kullabilirsin ⤵️**\n\n**Örnek:**\n**1.** `/bul gece mavisi`\n**2.** `/bul https://youtu.be/qLXUa89Q5WI`\n\n**İndirdiğin müzikler [gяαιfℓуяι¢ѕ ρℓαуℓιѕт](t.me/graiflyrics) kanalında paylaşılacaktır.**'
     message.reply_text(
         text=helptext, 
         quote=False,
@@ -88,7 +88,7 @@ def bul(_, message):
             info_dict = ydl.extract_info(link, download=False)
             audio_file = ydl.prepare_filename(info_dict)
             ydl.process_info(info_dict)
-        rep = f"**🎶 İndirildi. İyi Dinlemeler [𝑆𝑒𝑛𝑖𝑛 𝑆̧𝑎𝑟𝑘𝑖𝑛](t.me/graiflyrics) 🎶.**"
+        rep = f"**🎶 İndirildi. İyi Dinlemeler [gяαιfℓуяι¢ѕ ρℓαуℓιѕт](t.me/graiflyrics) 🎶.**"
         secmul, dur, dur_arr = 1, 0, duration.split(":")
         for i in range(len(dur_arr) - 1, -1, -1):
             dur += int(float(dur_arr[i])) * secmul
